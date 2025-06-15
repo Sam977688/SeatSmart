@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SeatSmart - Room 501</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #003366;
+      --accent: #fdb827;
+      --light-bg: #f5f7fa;
+      --card-bg: #ffffff;
+      --text-dark: #1a1a1a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+    }
+
+    header {
+      background-color: #2f3e46;
+      color: var(--accent);
+      text-align: center;
+      padding: 20px 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 20px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .front {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .seat {
+      width: 40px;
+      height: 40px;
+      background-color: var(--accent);
+      margin: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid #000;
+      transition: transform 0.1s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .seat:hover {
+      transform: scale(1.1);
+    }
+
+    .selected {
+      background-color: dodgerblue;
+    }
+
+    .reserved {
+      background-color: var(--primary);
+      pointer-events: none;
+      color: white;
+    }
+
+    .middle-space {
+      width: 40px;
+    }
+
+    .button {
+      margin: 15px 10px 0;
+      padding: 10px 25px;
+      font-weight: 600;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .button:hover {
+      background-color: #163b6b;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: var(--text-dark);
+    }
+  </style>
+</head>
+<body>
+
+<header><i class="fas fa-chair"></i> SeatSmart - Room 501</header>
+
+<div class="container">
+  <div class="front">FRONT OF THE ROOM</div>
+  <div id="seatsArea"></div>
+
+  <div style="text-align: center;">
+    <button class="button" onclick="confirmReservation()"><i class="fas fa-check-circle"></i> Reserve Seat</button>
+    <button class="button" onclick="cancelSeat()"><i class="fas fa-times-circle"></i> Cancel Seat</button>
+  </div>
+
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+  let attempts = 0;
+  let selectedSeat = null;
+  const seatStatus = {};
+
+  function renderRoom() {
+    const container = document.getElementById('seatsArea');
+    container.innerHTML = '';
+    const rowLabels = ['A', 'B', 'C', 'D', 'E'];
+
+    for (let row = 0; row < 5; row++) {
+      const div = document.createElement('div');
+      div.className = 'row';
+      for (let col = 0; col < 11; col++) {
+        if (col === 5) {
+          const space = document.createElement('div');
+          space.className = 'middle-space';
+          div.appendChild(space);
+        } else {
+          const label = rowLabels[row] + (col < 5 ? col + 1 : col);
+          const seatId = `r${row}c${col}`;
+          const seat = document.createElement('div');
+          seat.className = 'seat';
+          seat.dataset.id = seatId;
+
+          if (seatStatus[seatId] === 'reserved') {
+            seat.classList.add('reserved');
+          } else if (seatId === selectedSeat) {
+            seat.classList.add('selected');
+          }
+
+          seat.textContent = label;
+          seat.onclick = () => selectSeat(seatId);
+          div.appendChild(seat);
+        }
+      }
+      container.appendChild(div);
+    }
+
+    const backRow = document.createElement('div');
+    backRow.className = 'row';
+    for (let i = 0; i < 12; i++) {
+      const label = 'F' + (i + 1);
+      const seatId = `back${i}`;
+      const seat = document.createElement('div');
+      seat.className = 'seat';
+      seat.dataset.id = seatId;
+
+      if (seatStatus[seatId] === 'reserved') {
+        seat.classList.add('reserved');
+      } else if (seatId === selectedSeat) {
+        seat.classList.add('selected');
+      }
+
+      seat.textContent = label;
+      seat.onclick = () => selectSeat(seatId);
+      backRow.appendChild(seat);
+    }
+    container.appendChild(backRow);
+  }
+
+  function selectSeat(id) {
+    if (seatStatus[id] === 'reserved') return;
+    selectedSeat = id;
+    document.getElementById('message').textContent = '';
+    renderRoom();
+  }
+
+  function confirmReservation() {
+    const message = document.getElementById('message');
+    if (!selectedSeat) {
+      message.textContent = 'Please select a seat.';
+      return;
+    }
+    if (attempts >= 2) {
+      message.textContent = 'Maximum attempts reached. Contact your professor.';
+      return;
+    }
+    const confirm = window.confirm("Your seat is now reserved. Is this final?");
+    if (confirm) {
+      seatStatus[selectedSeat] = 'reserved';
+      selectedSeat = null;
+      message.style.color = 'green';
+      message.textContent = 'Seat successfully reserved.';
+    } else {
+      attempts++;
+      message.style.color = 'red';
+      message.textContent = `Reservation cancelled. Attempts left: ${2 - attempts}`;
+    }
+    renderRoom();
+  }
+
+  function cancelSeat() {
+    const message = document.getElementById('message');
+    if (attempts >= 2) {
+      message.textContent = 'Seat cannot be removed. Contact your professor.';
+      return;
+    }
+
+    const reservedSeat = Object.keys(seatStatus).find(k => seatStatus[k] === 'reserved');
+    if (!reservedSeat) {
+      message.textContent = 'No reserved seat to cancel.';
+      return;
+    }
+
+    seatStatus[reservedSeat] = null;
+    selectedSeat = null;
+    attempts++;
+    message.style.color = 'orange';
+    message.textContent = `Seat cancelled. Attempts left: ${2 - attempts}`;
+    renderRoom();
+  }
+
+  renderRoom();
+</script>
+
+<main>
+  <footer>
+    &copy; 2025 SeatSmart. All rights reserved.
+  </footer>
+</main>
+</body>
+</html>

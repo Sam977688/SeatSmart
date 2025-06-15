@@ -1,0 +1,299 @@
+<!-- File: SeatSmart_Room401.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SeatSmart - Room 408</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background-color: #2f3e46;
+      color: gold;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .front-label {
+      writing-mode: vertical-rl;
+      font-weight: 600;
+      font-size: 18px;
+      color: #2f3e46;
+      user-select: none;
+      padding: 0 12px;
+      align-self: center;
+    }
+
+    .room-layout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .seating-area {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .seat {
+      width: 40px;
+      height: 40px;
+      background-color: #1e4e8c;
+      border-radius: 8px;
+      border: 2px solid #163b6b;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(30, 78, 140, 0.4);
+      transition: background-color 0.25s ease, transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: white;
+    }
+
+    .seat:hover:not(.reserved):not(.selected) {
+      background-color: #163b6b;
+      transform: scale(1.1);
+    }
+
+    .selected {
+      background-color: gold;
+      border-color: #b38600;
+      box-shadow: 0 0 8px #b38600;
+    }
+
+    .reserved {
+      background-color: #777;
+      border-color: #555;
+      cursor: default;
+      box-shadow: none;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 12px 28px;
+      background-color: #1e4e8c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: #163b6b;
+    }
+
+    .message {
+      text-align: center;
+      font-weight: 600;
+      min-height: 24px;
+      color: #e03e2f;
+    }
+
+    .message.success { color: #3a6a30; }
+    .message.warning { color: #b38600; }
+
+    footer {
+      text-align: center;
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .room-layout {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .front-label {
+        writing-mode: horizontal-tb;
+        padding: 0;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header><i class="fas fa-chair"></i> SeatSmart - Room 408</header>
+  <div class="container">
+    <div class="room-layout">
+      <div class="seating-area" id="seatingArea"></div>
+      <div class="front-label">FRONT OF ROOM</div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="confirmReservation()"><i class="fas fa-check-circle"></i> Reserve Seat</button>
+      <button onclick="cancelSeat()"><i class="fas fa-times-circle"></i> Cancel Seat</button>
+    </div>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    let attempts = 0;
+    let selectedSeat = null;
+    const seatStatus = {};
+
+    function renderRoom() {
+      const seatingArea = document.getElementById('seatingArea');
+      seatingArea.innerHTML = '';
+      const rowLetters = ['A','B','C','D','E','F'];
+
+      for (let row = 0; row < 6; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row';
+
+        for (let seatIndex = 0; seatIndex < 6; seatIndex++) {
+          const seatLabel = `${rowLetters[row]}${seatIndex + 1}`;
+          const seat = document.createElement('div');
+          seat.className = 'seat';
+          seat.textContent = seatLabel;
+
+          if (seatStatus[seatLabel] === 'reserved') {
+            seat.classList.add('reserved');
+          } else if (seatLabel === selectedSeat) {
+            seat.classList.add('selected');
+          }
+
+          seat.dataset.id = seatLabel;
+          seat.onclick = () => selectSeat(seatLabel);
+          rowDiv.appendChild(seat);
+        }
+        seatingArea.appendChild(rowDiv);
+      }
+
+      const backRow = document.createElement('div');
+      backRow.className = 'row';
+      backRow.style.justifyContent = 'center';
+      const backRowLetter = 'G';
+
+      for (let i = 0; i < 6; i++) {
+        const seatLabel = `${backRowLetter}${i + 1}`;
+        const seat = document.createElement('div');
+        seat.className = 'seat';
+        seat.textContent = seatLabel;
+
+        if (seatStatus[seatLabel] === 'reserved') {
+          seat.classList.add('reserved');
+        } else if (seatLabel === selectedSeat) {
+          seat.classList.add('selected');
+        }
+
+        seat.dataset.id = seatLabel;
+        seat.onclick = () => selectSeat(seatLabel);
+        backRow.appendChild(seat);
+      }
+      seatingArea.appendChild(backRow);
+    }
+
+    function selectSeat(id) {
+      if (seatStatus[id] === 'reserved') return;
+      selectedSeat = id;
+      const msg = document.getElementById('message');
+      msg.textContent = '';
+      msg.className = 'message';
+      renderRoom();
+    }
+
+    function confirmReservation() {
+      const message = document.getElementById('message');
+      if (!selectedSeat) {
+        message.className = 'message';
+        message.style.color = '#e03e2f';
+        message.textContent = 'Please select a seat.';
+        return;
+      }
+      if (attempts >= 2) {
+        message.className = 'message';
+        message.style.color = '#e03e2f';
+        message.textContent = 'Maximum attempts reached. Contact your professor.';
+        return;
+      }
+      const confirmFinal = window.confirm('Your seat is now reserved. Is this final?');
+      if (confirmFinal) {
+        seatStatus[selectedSeat] = 'reserved';
+        selectedSeat = null;
+        message.className = 'message success';
+        message.textContent = 'Seat successfully reserved.';
+      } else {
+        attempts++;
+        message.className = 'message warning';
+        message.textContent = `Reservation cancelled. Attempts left: ${2 - attempts}`;
+      }
+      renderRoom();
+    }
+
+    function cancelSeat() {
+      const message = document.getElementById('message');
+      if (attempts >= 2) {
+        message.className = 'message';
+        message.style.color = '#e03e2f';
+        message.textContent = 'Seat cannot be removed. Contact your professor.';
+        return;
+      }
+      const reservedSeat = Object.keys(seatStatus).find(k => seatStatus[k] === 'reserved');
+      if (!reservedSeat) {
+        message.className = 'message';
+        message.style.color = '#e03e2f';
+        message.textContent = 'No reserved seat to cancel.';
+        return;
+      }
+
+      seatStatus[reservedSeat] = null;
+      attempts++;
+      selectedSeat = null;
+      message.className = 'message warning';
+      message.textContent = `Seat cancelled. Attempts left: ${2 - attempts}`;
+      renderRoom();
+    }
+
+    renderRoom();
+  </script>
+
+  <footer>&copy; 2025 SeatSmart. All rights reserved.</footer>
+</body>
+</html>

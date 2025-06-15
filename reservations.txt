@@ -1,0 +1,8 @@
+student@example.com | 408 | 
+student@example.com | 501 | 
+student@example.com | 408 | r2c4
+student@example.com | 501 | back8
+student@example.com | 408 | r2c4
+student@example.com | 501 | back8
+student@example.com | 408 | r2c4
+student@example.com | 501 | back8

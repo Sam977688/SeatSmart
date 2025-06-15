@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeatSmart - Professor Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #003366;
+      --accent: #fdb827;
+      --light-bg: #f5f7fa;
+      --card-bg: #ffffff;
+      --text-dark: #1a1a1a;
+      --text-light: #666;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+    }
+
+    header {
+      background-color: #2f3e46;
+      color: gold;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .welcome {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .search-bar {
+      display: flex;
+      max-width: 500px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+
+    .search-bar button {
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background-color: #003366;
+      color: var(--primary);
+    }
+
+    .schedule-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+    }
+
+    .room-schedule {
+      background-color: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .room-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .student-list {
+      margin-top: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .student-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .student-name {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .seat-info {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 5px;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+    }
+
+    .no-results {
+      font-style: italic;
+      color: #aaa;
+      margin-top: 10px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 90%;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #2f3e46;
+      color: gold;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .schedule {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .schedule p {
+      margin: 8px 0;
+      font-weight: 400;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .dropdown {
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 16px;
+      color: #2c3e50;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #1e4e8c;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1e4e8c;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+      background-color: #fff;
+    }
+
+    select:hover, select:focus {
+      border-color: #163b6b;
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+      background-color: #fff;
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 14px 12px;
+      text-align: left;
+      font-size: 15px;
+      color: #444;
+    }
+
+    th {
+      background-color: #1e4e8c;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background-color: #f0f8ff;
+      transition: background-color 0.3s ease;
+    }
+    .logout{
+      margin-bottom: 20px;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: black;
+    }
+    
+    .modal-form-group {
+      margin-bottom: 15px;
+    }
+    
+    .modal-form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .modal-form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .modal-actions {
+      text-align: right;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header><i class="fas fa-chair"></i> SeatSmart </header>
+  <div class="container">
+    <div class="welcome"><i class="fas fa-user-graduate"></i> Welcome, Professor Marizkays P. Jamison!</div>
+    <button class="btn logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+    <script>
+      document.getElementById("logoutBtn").addEventListener("click", function () {
+        window.location.href = "login.html";
+      });
+    </script>
+    
+    <div class="container">
+      <div class="schedule">
+        <h2>Schedule:</h2>
+        <p><b> Tuesday 7:00 A.M. to 9:45 A.M. </b></p>
+        <p> 501, 5th floor, Main Building, Lecture Room</p>
+        <p>       </p>
+        <p><b> Friday 7:00 A.M. to 11:00 A.M. </b></p>
+        <p> 408, 4th floor, Main Building, Computer Laboratory </p>
+      </div>
+
+      <!-- Room Dropdown -->
+      <div class="room-select">
+        <label for="roomDropdown"><strong>Choose a room:</strong></label>
+        <select id="roomDropdown" onchange="handleRoomChange()">
+          <option value="501">Room 501</option>
+          <option value="408">Room 408</option>
+        </select>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+        <div>
+          <button class="btn btn-success" onclick="allowAll()">Allow All</button>
+          <button class="btn btn-danger" onclick="disallowAll()">Disallow All</button>
+        </div>
+        <input type="text" id="searchInput" oninput="searchStudent()" placeholder="Search student by name..." />
+        <div>
+          <button class="btn" onclick="openEditModal()">Edit</button>
+        </div>
+      </div>
+
+      <!-- Student Table -->
+      <div id="studentTableContainer" style="margin-top: 20px;">
+        <!-- Table will be dynamically rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditModal()">&times;</span>
+      <h2>Manage Students</h2>
+      <div class="modal-form-group">
+        <label for="studentName">Student Name:</label>
+        <input type="text" id="studentName" placeholder="Enter student name">
+      </div>
+      <div class="modal-form-group">
+        <label for="studentSeat">Seat Number:</label>
+        <input type="text" id="studentSeat" placeholder="Enter seat number">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="addStudent()">Add Student</button>
+        <button class="btn btn-danger" onclick="deleteStudent()">Delete Selected</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  async function syncReservedSeats(room) {
+  try {
+    const response = await fetch(`/api/seats?room=${room}`);
+    if (!response.ok) throw new Error('Failed to load seat data');
+
+    const seatMap = await response.json(); // example: { "r0c1": "Alvarez, Homer Gabriel C.", ... }
+
+    // Reset seats first
+    studentsData[room].forEach(student => student.seat = "");
+
+    for (const [seat, studentName] of Object.entries(seatMap)) {
+      const student = studentsData[room].find(s => s.name === studentName);
+      if (student) student.seat = seat;
+    }
+
+  } catch (error) {
+    console.error(`Error loading seats for room ${room}:`, error);
+  }
+}
+
+  const studentsData = {
+    "501": [
+      { name: "Alvarez, Homer Gabriel C.", seat: "", allowed: true, selected: false },
+      { name: "Anuran, Kim Maryjane B.", seat: "", allowed: true, selected: false },
+      { name: "Apolinario, Remus Cesar M.", seat: "", allowed: true, selected: false },
+      { name: "Arillo, Clarence R.", seat: "", allowed: true, selected: false },
+      { name: "Atayde, Andrei Louise C.", seat: "", allowed: true, selected: false },
+      { name: "Casa, Aron Syd R.", seat: "", allowed: true, selected: false },
+      { name: "Castro, James Adrian", seat: "", allowed: true, selected: false },
+      { name: "Cobarte, Gilmarc Andre M.", seat: "", allowed: true, selected: false },
+      { name: "Corpin, Alexis C.", seat: "", allowed: true, selected: false },
+      { name: "David, Marc Lawrence T.", seat: "", allowed: true, selected: false },
+      { name: "De Chavez, Leona Charlize D.", seat: "", allowed: true, selected: false },
+      { name: "Dos Santos, Mark Lester S.", seat: "", allowed: true, selected: false },
+      { name: "Fajardo, Jasper D.", seat: "", allowed: true, selected: false },
+      { name: "Gabot, Kelly B.", seat: "", allowed: true, selected: false },
+      { name: "Genilza, Vicente B.", seat: "", allowed: true, selected: false },
+      { name: "Gregorio, Mark Stephen P.", seat: "", allowed: true, selected: false },
+      { name: "Hernandez, Richlee E.", seat: "", allowed: true, selected: false },
+      { name: "Jondiz III, Cesar S.", seat: "", allowed: true, selected: false },
+      { name: "Ladip, Justine Caelheb M.", seat: "", allowed: true, selected: false },
+      { name: "Laguardia, Marielle M.", seat: "", allowed: true, selected: false },
+      { name: "Ledesma, Royce Christian S.", seat: "", allowed: true, selected: false },
+      { name: "Lopez, Rafael Iñigo T.", seat: "", allowed: true, selected: false },
+      { name: "Magday, Dana Mae F.", seat: "", allowed: true, selected: false },
+      { name: "Malig, Justine Aron", seat: "", allowed: true, selected: false },
+      { name: "Mangunay, Cyrus Ashton G.", seat: "", allowed: true, selected: false },
+      { name: "Mercado, Moira", seat: "", allowed: true, selected: false },
+      { name: "Mercado, Ysabelle Louise E.", seat: "", allowed: true, selected: false },
+      { name: "Openiano, Flora Mae V.", seat: "", allowed: true, selected: false },
+      { name: "Pedrano, Marella Jill S.", seat: "", allowed: true, selected: false },
+      { name: "Rodulfo, Jonald L.", seat: "", allowed: true, selected: false },
+      { name: "Sabado, Lander Aedan T.", seat: "", allowed: true, selected: false },
+      { name: "Sample Student", seat: "", allowed: true, selected: false },
+      { name: "San Diego, Renz Danniel S.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Karel Alwina M.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Samantha Lui A.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Tyra B.", seat: "", allowed: true, selected: false },
+      { name: "Senopera, Michelle Jean R.", seat: "", allowed: true, selected: false },
+      { name: "Tuzon, El Wayne Jhyro H.", seat: "", allowed: true, selected: false },
+      { name: "Wales, Cyralin Myles A.", seat: "", allowed: true, selected: false },
+      { name: "Yumang, Oscar Cloud Vincent C.", seat: "", allowed: true, selected: false }
+    ],
+    "408": [
+      { name: "Alvarez, Homer Gabriel C.", seat: "", allowed: true, selected: false },
+      { name: "Anuran, Kim Maryjane B.", seat: "", allowed: true, selected: false },
+      { name: "Apolinario, Remus Cesar M.", seat: "", allowed: true, selected: false },
+      { name: "Arillo, Clarence R.", seat: "", allowed: true, selected: false },
+      { name: "Atayde, Andrei Louise C.", seat: "", allowed: true, selected: false },
+      { name: "Casa, Aron Syd R.", seat: "", allowed: true, selected: false },
+      { name: "Castro, James Adrian", seat: "", allowed: true, selected: false },
+      { name: "Cobarte, Gilmarc Andre M.", seat: "", allowed: true, selected: false },
+      { name: "Corpin, Alexis C.", seat: "", allowed: true, selected: false },
+      { name: "David, Marc Lawrence T.", seat: "", allowed: true, selected: false },
+      { name: "De Chavez, Leona Charlize D.", seat: "", allowed: true, selected: false },
+      { name: "Dos Santos, Mark Lester S.", seat: "", allowed: true, selected: false },
+      { name: "Fajardo, Jasper D.", seat: "", allowed: true, selected: false },
+      { name: "Gabot, Kelly B.", seat: "", allowed: true, selected: false },
+      { name: "Genilza, Vicente B.", seat: "", allowed: true, selected: false },
+      { name: "Gregorio, Mark Stephen P.", seat: "", allowed: true, selected: false },
+      { name: "Hernandez, Richlee E.", seat: "", allowed: true, selected: false },
+      { name: "Jondiz III, Cesar S.", seat: "", allowed: true, selected: false },
+      { name: "Ladip, Justine Caelheb M.", seat: "", allowed: true, selected: false },
+      { name: "Laguardia, Marielle M.", seat: "", allowed: true, selected: false },
+      { name: "Ledesma, Royce Christian S.", seat: "", allowed: true, selected: false },
+      { name: "Lopez, Rafael Iñigo T.", seat: "", allowed: true, selected: false },
+      { name: "Magday, Dana Mae F.", seat: "", allowed: true, selected: false },
+      { name: "Malig, Justine Aron", seat: "", allowed: true, selected: false },
+      { name: "Mangunay, Cyrus Ashton G.", seat: "", allowed: true, selected: false },
+      { name: "Mercado, Moira", seat: "", allowed: true, selected: false },
+      { name: "Mercado, Ysabelle Louise E.", seat: "", allowed: true, selected: false },
+      { name: "Openiano, Flora Mae V.", seat: "", allowed: true, selected: false },
+      { name: "Pedrano, Marella Jill S.", seat: "", allowed: true, selected: false },
+      { name: "Rodulfo, Jonald L.", seat: "", allowed: true, selected: false },
+      { name: "Sabado, Lander Aedan T.", seat: "", allowed: true, selected: false },
+      { name: "Sample Student", seat: "", allowed: true, selected: false },
+      { name: "San Diego, Renz Danniel S.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Karel Alwina M.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Samantha Lui A.", seat: "", allowed: true, selected: false },
+      { name: "Santos, Tyra B.", seat: "", allowed: true, selected: false },
+      { name: "Senopera, Michelle Jean R.", seat: "", allowed: true, selected: false },
+      { name: "Tuzon, El Wayne Jhyro H.", seat: "", allowed: true, selected: false },
+      { name: "Wales, Cyralin Myles A.", seat: "", allowed: true, selected: false },
+      { name: "Yumang, Oscar Cloud Vincent C.", seat: "", allowed: true, selected: false }
+    ]
+  };
+
+  let currentRoom = "501";
+
+  // Initialize the page
+  document.addEventListener('DOMContentLoaded', function() {
+    renderStudentTable();
+  });
+
+  function handleRoomChange() {
+    currentRoom = document.getElementById("roomDropdown").value;
+    renderStudentTable();
+  }
+
+  function renderStudentTable(filter = "") {
+    const container = document.getElementById("studentTableContainer");
+    const students = studentsData[currentRoom].filter(student =>
+      student.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    if (students.length === 0) {
+      container.innerHTML = '<div class="no-results">No students found.</div>';
+      return;
+    }
+
+    let tableHTML = `
+      <table border="1" width="100%" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Seat Number</th>
+            <th>Status</th>
+            <th>Action</th>
+            <th>Select</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    students.forEach((student, index) => {
+      tableHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${student.name}</td>
+          <td>${student.seat || '-'}</td>
+          <td>${student.allowed ? '<span style="color:green">Allowed</span>' : '<span style="color:red">Disabled</span>'}</td>
+          <td>
+            <button class="btn" onclick="toggleAllow(${index})">
+              ${student.allowed ? "Disable" : "Allow"}
+            </button>
+          </td>
+          <td>
+            <input type="checkbox" onchange="toggleStudentSelection(${index})" ${student.selected ? 'checked' : ''}>
+          </td>
+        </tr>
+      `;
+    });
+
+    tableHTML += `</tbody></table>`;
+    container.innerHTML = tableHTML;
+  }
+
+  function toggleAllow(index) {
+    studentsData[currentRoom][index].allowed = !studentsData[currentRoom][index].allowed;
+    renderStudentTable(document.getElementById("searchInput").value);
+  }
+
+  function allowAll() {
+    studentsData[currentRoom].forEach(student => student.allowed = true);
+    renderStudentTable(document.getElementById("searchInput").value);
+  }
+
+  function disallowAll() {
+    studentsData[currentRoom].forEach(student => student.allowed = false);
+    renderStudentTable(document.getElementById("searchInput").value);
+  }
+
+  function searchStudent() {
+    const query = document.getElementById("searchInput").value;
+    renderStudentTable(query);
+  }
+
+  // Student management functions
+  function openEditModal() {
+    document.getElementById('editModal').style.display = 'block';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  function addStudent() {
+    const name = document.getElementById('studentName').value;
+    const seat = document.getElementById('studentSeat').value;
+    
+    if (!name) {
+      alert('Please enter a student name');
+      return;
+    }
+    
+    // Check if student already exists
+    const exists = studentsData[currentRoom].some(student => 
+      student.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    
+    if (exists) {
+      alert('This student already exists in the list');
+      return;
+    }
+    
+    studentsData[currentRoom].push({ 
+      name: name.trim(), 
+      seat: seat.trim(), 
+      allowed: true,
+      selected: false 
+    });
+    
+    // Clear inputs
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentSeat').value = '';
+    
+    // Refresh table
+    renderStudentTable(document.getElementById("searchInput").value);
+    
+    // Close modal
+    closeEditModal();
+  }
+
+  function toggleStudentSelection(index) {
+    studentsData[currentRoom][index].selected = !studentsData[currentRoom][index].selected;
+  }
+
+  function deleteStudent() {
+    // Get selected students
+    const selectedStudents = studentsData[currentRoom].filter(student => student.selected);
+    
+    if (selectedStudents.length === 0) {
+      alert('Please select at least one student to delete');
+      return;
+    }
+    
+    if (confirm(`Are you sure you want to delete ${selectedStudents.length} selected student(s)?`)) {
+      studentsData[currentRoom] = studentsData[currentRoom].filter(student => !student.selected);
+      renderStudentTable(document.getElementById("searchInput").value);
+      closeEditModal();
+    }
+  }
+</script>
+
+  <main>
+    <footer>
+      &copy; 2025 SeatSmart. All rights reserved.
+    </footer>
+  </main>
+</body>
+</html>

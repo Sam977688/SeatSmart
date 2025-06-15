@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SeatSmart - Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+   
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+
+    header {
+      background-color: #2f3e46;
+      color: gold;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+
+    .welcome {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+
+    .description {
+      font-size: 16px;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+
+    .room {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease;
+    }
+
+
+    .room:hover {
+      transform: translateY(-4px);
+    }
+
+
+    .room h3 {
+      font-size: 20px;
+      color: #1e4e8c;
+      margin-bottom: 10px;
+    }
+
+
+    .room p {
+      margin: 6px 0;
+      font-size: 15px;
+      color: #444;
+    }
+
+
+    .room p i {
+      margin-right: 6px;
+      color: #1e4e8c;
+    }
+
+
+    .room button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #1e4e8c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+
+    .room button:hover {
+      background-color: #163b6b;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    .logout{
+      margin-bottom: 20px;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #1e4e8c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+   
+  </style>
+</head>
+<body>
+
+
+  <header><i class="fas fa-chair"></i> SeatSmart</header>
+
+
+  <div class="container">
+    <div class="welcome">👋 Welcome, Sample Student!</div>
+    <div class="description">
+      Easily view and reserve your seat in classrooms across COM244 O.O.P.'s course. Click "Check Availability" to begin.
+    </div>
+    <button class="btn logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+
+<script>
+  document.getElementById("logoutBtn").addEventListener("click", function () {
+    // Optionally clear session/local storage or cookies here
+    window.location.href = "login.html";
+  });
+</script>
+    <div class="room">
+      <h3><i class="fas fa-door-open"></i> Room 501</h3>
+      <p><i class="fas fa-map-marker-alt"></i><strong>Location:</strong> 5th floor, Main Building, Lecture Room</p>
+      <p><i class="fas fa-users"></i><strong> Capacity:</strong> 40 students</p>
+      <button class="btn" onclick="checkAvailability('501')"><i class="fas fa-calendar-check"></i> Check Availability</button>
+    </div>
+
+
+    <div class="room">
+      <h3><i class="fas fa-door-open"></i> Room 408</h3>
+      <p><i class="fas fa-map-marker-alt"></i><strong>Location:</strong> 4th floor, Main Building, Computer Laboratory</p>
+      <p><i class="fas fa-users"></i><strong> Capacity:</strong> 40 students</p>
+      <button class="btn" onclick="checkAvailability('408')"><i class="fas fa-calendar-check"></i> Check Availability</button>
+    </div>
+  </div>
+
+
+  <script>
+    function checkAvailability(room) {
+      window.location.href = room + '.html';
+    }
+  </script>
+
+<main>
+   <footer>
+    &copy; 2025 SeatSmart. All rights reserved.
+  </footer>
+</main>
+
+</body>
+</html>

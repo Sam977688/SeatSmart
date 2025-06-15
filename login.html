@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeatSmart - Log In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #2f3e46;
+      color: gold;
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      padding: 20px 0;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      padding: 40px 30px 60px;
+      box-sizing: border-box;
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .login-container img.logo {
+      width: 120px;
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .login-container img.logo:hover {
+      transform: scale(1.05);
+    }
+
+    .login-container h1 {
+      margin: 0 0 30px;
+      font-weight: 700;
+      color: #1e4e8c;
+      font-size: 32px;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-size: 14px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #1e4e8c;
+      outline: none;
+      box-shadow: 0 0 5px rgba(30, 78, 140, 0.5);
+    }
+
+    .form-group i {
+      position: absolute;
+      top: 37px;
+      left: 12px;
+      color: #1e4e8c;
+      font-size: 18px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .checkbox-group input {
+      margin-right: 10px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    button {
+      width: 100%;
+      background-color: #1e4e8c;
+      border: none;
+      padding: 14px;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(30, 78, 140, 0.3);
+    }
+
+    button:hover {
+      background-color: #163b6b;
+      box-shadow: 0 6px 14px rgba(22, 59, 107, 0.5);
+    }
+
+    .links {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #1e4e8c;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .links a:hover {
+      opacity: 0.75;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #2f3e46;
+      color: white;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 420px) {
+      .login-container {
+        padding: 30px 20px 60px;
+      }
+
+      header {
+        font-size: 24px;
+        padding: 15px 0;
+      }
+
+      .links {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header><i class="fas fa-chair"></i> SeatSmart</header>
+  <main>
+    <div class="login-container">
+      <img src="SeatSmart Logo.jpg" alt="SeatSmart Logo" class="logo" />
+      <h1>Welcome!</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" placeholder="Enter your e-mail" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember Me</label>
+        </div>
+        <button type="submit">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <div class="links">
+          <a href="forgotpass.html"><i class="fas fa-key"></i> Forgot Password?</a>
+          <a href="createacc.html"><i class="fas fa-user-plus"></i> Create Account</a>
+        </div>
+      </form>
+    </div>
+  </main>
+  <footer>
+    &copy; 2025 SeatSmart. All rights reserved.
+  </footer>
+  <script>
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const pwd = document.getElementById('password').value;
+      if (pwd === 'Password') {
+        if (email === 'example@student.com') {
+          window.location.href = 'dashboard.html';
+        } else if (email === 'example@professor.com') {
+          window.location.href = 'dashboardprof.html';
+        } else {
+          alert('Invalid credentials');
+        }
+      } else {
+        alert('Invalid credentials');
+      }
+    });
+  </script>
+</body>
+</html>
