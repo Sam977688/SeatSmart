@@ -1,2 +1,1 @@
 # SeatSmart
-A basic seat reservation system developed exclusively for COM244 students of National University – Manila. It is designed to assist in the organized allocation of seats in computer laboratories and lecture rooms. 
